@@ -85,7 +85,7 @@ new_region <- function(coords=NULL,x,y){
 }
 ```
 
-* Some tests of the above constructors are given in the next code chunk.
+# Some tests of the above constructors are given in the next code chunk.
 
 ```{r}
 set.seed(123); n <- 10
@@ -95,7 +95,6 @@ new_region(x=x,y=y)
 new_node(new_region(x=x,y=y))
 ```
 
-* The recursive partitioning function is shown below
 
 ```{r}
 #---------------------------------------------------#
@@ -158,6 +157,43 @@ split.region <- function(R,xvar,spt){
   Rr <- new_region(c2,R$x[!r1_ind,,drop=FALSE],R$y[!r1_ind])
   return(list(Rl=Rl,Rr=Rr))
 }
+
+print.region <- function(R,print.data=FALSE){
+  cat("coordinates:\n")
+  print(R$coords)
+  if(print.data) {
+    cat("y:\n")
+    print(R$y)
+    cat("x:\n")
+    print(R$x)
+  }
+}
+
+plot_regions.tree <- function(tree){
+  # set up empty plot
+  plot(tree$data$x[,1],tree$data$x[,2],xlab="X1",ylab="X2") 
+  plot_regions.node(tree$childl)
+  plot_regions.node(tree$childr)
+}
+# lines to outline a region in its first two dimensions
+plot_regions.node<- function(node) {
+  if(is.null(node)) return(NULL)
+  x <- node$data$coords[,1]
+  y <- node$data$coords[,2]
+  lines(c(x[1],x[2],x[2],x[1],x[1]),c(y[1],y[1],y[2],y[2],y[1]),
+        col="red")
+  plot_regions.node(node$childl)
+  plot_regions.node(node$childr)
+}
+
+set.seed(123); n <- 10
+x <- data.frame(x1=rnorm(n),x2=rnorm(n))
+y <- rnorm(n)
+ mytree <- recpart(x,y)
+ 
+ 
+ 
+ 
 ```
 
 ## Exercises
